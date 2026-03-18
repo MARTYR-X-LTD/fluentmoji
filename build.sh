@@ -28,6 +28,10 @@ ensure_deps() {
 # ─── Step 1: Prepare ─────────────────────────────────────────────────────────
 
 prepare() {
+    if [ ! -d "fluentui-emoji" ]; then
+        log "Cloning fluentui-emoji..."
+        git clone --depth 1 https://github.com/microsoft/fluentui-emoji.git
+    fi
     log "Running prepare.py..."
     uv run python prepare.py
 }

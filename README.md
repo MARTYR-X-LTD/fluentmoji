@@ -29,10 +29,12 @@ Include the CSS for the style you want:
 Then use it:
 
 ```css
-.emoji {
-  font-family: 'Fluent Emoji Color', sans-serif;
+p {
+  font-family: sans-serif, 'Fluent Emoji Color';
 }
 ```
+
+Always place the text font first — the emoji font is a fallback. The browser uses it only for codepoints not found in the primary font.
 
 Only the woff2 chunks matching the emoji codepoints on your page will be downloaded.
 
@@ -75,10 +77,6 @@ Or install `uv` via the official installer: `curl -LsSf https://astral.sh/uv/ins
 ### Build
 
 ```bash
-# Clone the Fluent Emoji source (if not already present)
-git clone --depth 1 https://github.com/microsoft/fluentui-emoji.git
-
-# Run the full build
 ./build.sh
 ```
 
