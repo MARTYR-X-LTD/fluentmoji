@@ -132,6 +132,17 @@ def collect_emoji_entries(style_key: str, style_dir_name: str) -> list[dict]:
     return entries
 
 
+def svg_is_compatible(svg_path: Path) -> bool:
+    """Return False if the SVG contains elements picosvg cannot handle."""
+    try:
+        content = svg_path.read_text(errors="replace")
+        if "<mask" in content:
+            return False
+    except OSError:
+        return False
+    return True
+
+
 def create_symlinks_and_glyphmap(style_key: str, entries: list[dict]):
     """Create symlinked SVGs with nanoemoji-compatible names and a glyphmap CSV."""
     svg_dir = BUILD_DIR / style_key / "svgs"
@@ -149,6 +160,10 @@ def create_symlinks_and_glyphmap(style_key: str, entries: list[dict]):
             if unicode_str in seen_unicodes:
                 continue
             seen_unicodes.add(unicode_str)
+
+            if not svg_is_compatible(entry["svg_path"]):
+                print(f"  SKIP (incompatible): {entry['svg_path'].name}")
+                continue
 
             filename = codepoints_to_filename(unicode_str)
             link_path = svg_dir / filename

@@ -22,7 +22,41 @@ ensure_deps() {
     uv pip install nanoemoji fonttools brotli picosvg lxml 2>&1 | tail -3
 
     log "Patching nanoemoji to skip incompatible glyphs..."
-    git apply --directory .venv/lib/*/site-packages/nanoemoji "$PROJECT_ROOT/nanoemoji.patch" 2>/dev/null || true
+    uv run python - <<'EOF'
+import re, pathlib, sys
+
+site = next(pathlib.Path(".venv/lib").glob("python3.*/site-packages/nanoemoji"))
+
+# ninja.py: add -k 0 to keep going on individual SVG failures
+ninja_py = site / "ninja.py"
+src = ninja_py.read_text()
+patched = src.replace(
+    '["ninja", "-C",',
+    '["ninja", "-k", "0", "-C",'
+).replace(
+    'subprocess.run(ninja_cmd, check=True)',
+    'subprocess.run(ninja_cmd)'
+)
+if patched == src:
+    print("ninja.py: already patched or unexpected content, skipping")
+else:
+    ninja_py.write_text(patched)
+    print("ninja.py: patched")
+
+# write_font.py: wrap color_glyphs.append in try/except to skip broken glyphs
+wf_py = site / "write_font.py"
+src = wf_py.read_text()
+old = "        color_glyphs.append(\n            ColorGlyph.create("
+new = "        try: color_glyphs.append(\n            ColorGlyph.create("
+old_end = "            )\n        )\n    color_glyphs = tuple(color_glyphs)"
+new_end = '            )\n        )\n        except Exception as e: print(f\'Skipping glyph due to error: {e}\')\n    color_glyphs = tuple(color_glyphs)'
+patched = src.replace(old, new).replace(old_end, new_end)
+if patched == src:
+    print("write_font.py: already patched or unexpected content, skipping")
+else:
+    wf_py.write_text(patched)
+    print("write_font.py: patched")
+EOF
 }
 
 # ─── Step 1: Prepare ─────────────────────────────────────────────────────────
