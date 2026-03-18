@@ -1,0 +1,11 @@
+# Build artifacts
+build/
+dist/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Source repo (cloned separately)
+fluentui-emoji/
