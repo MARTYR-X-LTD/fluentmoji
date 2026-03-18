@@ -1,6 +1,27 @@
-# Fluent Emoji Webfonts
+# Fluentmoji
 
-Optimized, subsetted [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) webfonts for the web. Built as unicode-range-split woff2 chunks so browsers only download the glyphs actually used on a page.
+Optimized, subsetted [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) webfonts for the web. Built as unicode-range-split woff2 chunks so browsers only download the glyphs actually used on a page. Some work and inspiration from [tetunori/fluent-emoji-webfont](https://github.com/tetunori/fluent-emoji-webfont).
+
+## So... what's the deal?
+
+I like emojis. They are an underrated art form. And subjective as well. I love the ones from Microsoft. And I want to use them in my work and personal projects.
+
+But... how do you do it? Existant solutions that monkey-patch emojis in place client-side via javascript are finicky. They are, indeed, a hack. I want something clean. Something that does not involve network roundtrips for each emoji.
+
+We, then, are left with using emoji fonts. They are a thing, and browsers can use them! With.. some observations:
+
+- Emoji fonts are BIG in size. I mean, yes, for the people who ship +5MB javascript bundle to render a button there might not be a problem with it. But I do care. And every single person surfing the web.
+
+- Emoji fonts are yet not properly standarized. The best we have is COLRv1, which is supported by Chrome and Firefox. And then we have OT-SVG, with Safari and Firefox. There is a gap there. We can't choose one or the other. It must be the two. Browser development... what do we do with them?
+
+- Seems like we can merge both standards into the same font file. We are increasing the problem about size, though...
+
+- There are other standards, like something related to bitmaps (I don't remember exactly. Yes, I'm not an LLM writing this), which should work universally. The problem is, these usually result in huge files and they are rasterized graphics at the end of the day. They don't scale with resolution.
+
+
+## Hey, we have the technology! 🎉 
+
+Enter `@font-face tech()` and `unicode-range`, both CSS technologies. And to think there are people who dislike CSS. With `tech()` we can fetch the emoji standard the browser supports automatically, and ``unicode-range` implies we can do font-subsetting. Basically, split each font into many different chunks. So if we have one emoji in the page, instead of fetching the whole font, it will only fetch the small chunk that includes it. This is also figured out by the browser at run time.
 
 ## Styles
 
@@ -12,7 +33,7 @@ Each style ships two format variants that share the same `font-family` name:
 | Format | Browsers | CSS hint |
 |--------|----------|----------|
 | COLRv1 | Chrome, Firefox | `tech(color-COLRv1)` |
-| OT-SVG | Safari | `tech(color-SVG)` |
+| OT-SVG | Safari, Firefox | `tech(color-SVG)` |
 
 The browser picks the right one automatically via the `tech()` function in `@font-face`.
 
