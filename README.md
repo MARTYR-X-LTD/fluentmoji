@@ -57,14 +57,11 @@ As mentioned, `@font-face` with `tech()` hints to automatically serve the right 
 ```css
 @font-face {
   font-family: 'Fluent Emoji Color';
-  src: url('colrv1/chunk-000.woff2') format('woff2') tech(color-COLRv1); /* chrome & firefox */
+  src:
+    url('colrv1/chunk-000.woff2') format('woff2') tech(color-COLRv1),
+    url('otsvg/chunk-000.woff2') format('woff2') tech(color-SVG);
   unicode-range: U+1F600, U+1F601, U+1F602;
-}
-
-@font-face {
-  font-family: 'Fluent Emoji Color';
-  src: url('otsvg/chunk-000.woff2') format('woff2') tech(color-SVG); /* safari */
-  unicode-range: U+1F600, U+1F601, U+1F602;
+  font-display: swap;
 }
 ```
 
