@@ -23,41 +23,53 @@ We, then, are left with using emoji fonts. They are a thing, and browsers can us
 
 Enter `@font-face tech()` and `unicode-range`, both CSS technologies. And to think there are people who dislike CSS. With `tech()` we can fetch the emoji standard the browser supports automatically, and ``unicode-range` implies we can do font-subsetting. Basically, split each font into many different chunks. So if we have one emoji in the page, instead of fetching the whole font, it will only fetch the small chunk that includes it. This is also figured out by the browser at run time.
 
-## Styles
-
-- **Fluent Emoji Color** — full gradients, compositing, the works
-- **Fluent Emoji Flat** — flat solid colors
-
-Each style ships two format variants that share the same `font-family` name:
-
-| Format | Browsers | CSS hint |
-|--------|----------|----------|
-| COLRv1 | Chrome, Firefox | `tech(color-COLRv1)` |
-| OT-SVG | Safari, Firefox | `tech(color-SVG)` |
-
-The browser picks the right one automatically via the `tech()` function in `@font-face`.
-
 ## Usage
+
+Get the latest fonts from the [releases page](https://github.com/MARTYR-X-LTD/fluentmoji/releases).
+
+### Quick start
 
 Include the CSS for the style you want:
 
 ```html
-<link rel="stylesheet" href="dist/color/FluentEmojiColor.css">
-<!-- or -->
-<link rel="stylesheet" href="dist/flat/FluentEmojiFlat.css">
+<!-- Color style (with gradients and effects) -->
+<link rel="stylesheet" href="path/to/dist/color/FluentEmojiColor.css">
+
+<!-- Or Flat style (solid colors) -->
+<link rel="stylesheet" href="path/to/dist/flat/FluentEmojiFlat.css">
 ```
 
-Then use it:
+Then use it in your CSS:
 
 ```css
 p {
   font-family: sans-serif, 'Fluent Emoji Color';
+  /* or: font-family: sans-serif, 'Fluent Emoji Flat'; */
 }
 ```
 
 Always place the text font first — the emoji font is a fallback. The browser uses it only for codepoints not found in the primary font.
 
-Only the woff2 chunks matching the emoji codepoints on your page will be downloaded.
+### How it works
+
+As mentioned, `@font-face` with `tech()` hints to automatically serve the right format, and with `unicode-range` it only fetches the chunk needed to render the specific glyph (emoji):
+
+```css
+@font-face {
+  font-family: 'Fluent Emoji Color';
+  src: url('colrv1/chunk-000.woff2') format('woff2') tech(color-COLRv1); /* chrome & firefox */
+  unicode-range: U+1F600, U+1F601, U+1F602;
+}
+
+@font-face {
+  font-family: 'Fluent Emoji Color';
+  src: url('otsvg/chunk-000.woff2') format('woff2') tech(color-SVG); /* safari */
+  unicode-range: U+1F600, U+1F601, U+1F602;
+}
+```
+
+- **Chrome & Firefox** → load COLRv1 (~1.4 MB total)
+- **Safari** → load OT-SVG (~2.7 MB total)
 
 ## Output structure
 
