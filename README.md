@@ -129,7 +129,7 @@ The compiled fonts are split into unicode-range chunks and compressed to woff2. 
 
 ## Known issues
 
-Some Color SVGs have `<mask>` elements or degenerate gradient transforms that picosvg can't normalize. Affected glyphs are skipped silently and fall back to the system emoji font. Fix them manually in Inkscape if needed.
+Some Color SVGs have `<mask>` elements that picosvg can't normalize. These are automatically filtered out during the prepare step and fall back to the system emoji font.
 
 ## Source
 
