@@ -111,6 +111,7 @@ Or install `uv` via the official installer: `curl -LsSf https://astral.sh/uv/ins
 
 ```bash
 ./build.sh
+# 20 ~ 60 minutes to build
 ```
 
 The build script will:
