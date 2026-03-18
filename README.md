@@ -32,7 +32,7 @@ Get the latest fonts from the [releases page](https://github.com/MARTYR-X-LTD/fl
 Include the CSS for the style you want:
 
 ```html
-<!-- Color style (with gradients and effects) -->
+<!-- Color style (with gradients, 3D style) -->
 <link rel="stylesheet" href="path/to/dist/color/FluentEmojiColor.css">
 
 <!-- Or Flat style (solid colors) -->
@@ -65,8 +65,8 @@ As mentioned, `@font-face` with `tech()` hints to automatically serve the right 
 }
 ```
 
-- **Chrome & Firefox** → load COLRv1 (~1.4 MB total)
-- **Safari** → load OT-SVG (~2.7 MB total)
+- **Chrome & Firefox** → load COLRv1 (~1.2 MB total, ~26 KB per chunk)
+- **Safari** → load OT-SVG (~2.5 MB total, ~52 KB per chunk)
 
 ## Output structure
 
